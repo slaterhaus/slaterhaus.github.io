@@ -1,95 +1,31 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import { Box, Heading, Link, Text, VStack, Container } from "@chakra-ui/react";
+import NextLink from 'next/link';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <Container maxW="container.md" centerContent>
+        <Box textAlign="center" py={10}>
+          <Heading as="h1" size="2xl" mb={4} fontFamily="heading">
+            Welcome
+          </Heading>
+          <Text fontSize="xl" mb={6} fontFamily="body">
+            Links
+          </Text>
+          <VStack spacing={4}>
+            <NextLink href="/toys" passHref>
+              <Link color="accent" _hover={{ textDecoration: 'underline' }}>Toy Collection</Link>
+            </NextLink>
+            <NextLink href="/music" passHref>
+              <Link color="accent" _hover={{ textDecoration: 'underline' }}>Music and Melodies</Link>
+            </NextLink>
+            <NextLink href="/goals" passHref>
+              <Link color="accent" _hover={{ textDecoration: 'underline' }}>Personal Goals</Link>
+            </NextLink>
+            <NextLink href="/reading-reviews" passHref>
+              <Link color="accent" _hover={{ textDecoration: 'underline' }}>Reading, Writing, Reviews</Link>
+            </NextLink>
+          </VStack>
+        </Box>
+      </Container>
+  );
 }
