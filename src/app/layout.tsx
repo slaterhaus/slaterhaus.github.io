@@ -1,6 +1,6 @@
 import { Providers } from "@/components/providers";
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;

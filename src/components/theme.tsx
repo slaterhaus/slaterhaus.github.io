@@ -1,6 +1,22 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
+  styles: {
+    global: {
+      "@font-face": {
+        fontFamily: "battlesbridge",
+        src: `url('/fonts/battlesbridge.ttf') format('truetype')`,
+        fontWeight: "normal",
+        fontStyle: "normal",
+        fontDisplay: "swap",
+      },
+      "html, body": {
+        color: "dark",
+        backgroundColor: "parchment",
+        fontFamily: "body",
+      },
+    },
+  },
   colors: {
     primary: "#4A5568",  // Deep blue-gray
     secondary: "#B794F4",  // Soft lavender
@@ -11,10 +27,16 @@ const theme = extendTheme({
     // Add more colors as needed
   },
   fonts: {
-    heading: "'Playfair Display', serif",  // Ornate serif for headings
+    heading: "battlesbridge",  // Ornate serif for headings
     body: "'Lora', serif",  // Classic serif for body text
   },
   components: {
+    Link: {
+      baseStyle: {
+        fontWeight: "bold",
+        color: "accent",
+      }
+    },
     Button: {
       baseStyle: {
         fontWeight: "bold",
@@ -33,19 +55,6 @@ const theme = extendTheme({
       },
     },
   },
-  styles: {
-    global: {
-      // Use ornamental borders, shadows, and backgrounds
-      "html, body": {
-        color: "dark",
-        backgroundColor: "parchment",
-        fontFamily: "body",
-      },
-      // Add more global styles as needed
-    },
-  },
-
-
 });
 
 export default theme;
