@@ -42,29 +42,16 @@ function RotatingLights() {
 }
 
 export default function Home() {
-  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
       <div style={{width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Suspense fallback={<div/>}>
         <Heading position={"absolute"} mixBlendMode={"difference"} lineHeight={0} fontSize={"10em"} filter={"blur(2px)"}>Slaterhaus</Heading>
-        <Canvas style={dimensions}>
+        <Canvas>
           <RotatingLights/>
-          <Suspense>
             <Tree position={[0, -200, -400]} scale={.25}/>
-          </Suspense>
+
         </Canvas>
+      </Suspense>
       </div>
   );
 }
