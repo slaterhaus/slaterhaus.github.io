@@ -18,7 +18,8 @@ export default function Home() {
 
 function SpinningMesh() {
   // This reference will give us direct access to the mesh
-  const mesh = useRef<Mesh>();
+  const mesh = useRef<Mesh>(null!)
+
 
   // Set up state for the hovered and active state
   const [hovered, setHover] = useState(false);
