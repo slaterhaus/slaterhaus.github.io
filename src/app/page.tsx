@@ -1,15 +1,15 @@
 "use client";
-import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Suspense, useRef, useState } from 'react';
-import { AmbientLight, Color, DirectionalLight, Mesh } from 'three';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Color, DirectionalLight } from 'three';
 // @ts-ignore
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
+import { Container, Heading } from "@chakra-ui/react";
 
-const Model = () => {
-  const {height} = useThree((state) => state.viewport);
-  const fbx = useLoader(FBXLoader, "/objects/prefab_beech_tree_04.fbx")
 
-  return <primitive object={fbx} scale={.25} position={[0, -height * 25, -400]}/>;
+const Tree = ({position, scale}: { position: [number, number, number], scale: number } = {position: [0, 0, 0], scale: .25}) => {
+  const fbx = useLoader(FBXLoader, "/objects/prefab_beech_tree_04.fbx");
+  return <primitive object={fbx} scale={.25} position={position} />;
 };
 
 function RotatingLights() {
@@ -35,56 +35,37 @@ function RotatingLights() {
 
   return (
       <>
-        <directionalLight ref={directionalLightRef2} />
+        <directionalLight ref={directionalLightRef2}/>
         <directionalLight ref={directionalLightRef}/>
       </>
   );
 }
 
 export default function Home() {
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
       <div style={{width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Canvas>
-          {/*<ambientLight intensity={1.0} position={[0, 0, -5]}/>*/}
-          {/*<directionalLight color="white" position={[0, -10, -70]} intensity={1000}/>*/}
-          {/*<SpinningMesh/>*/}
+        <Heading position={"absolute"} mixBlendMode={"difference"} lineHeight={0} fontSize={"10em"} filter={"blur(2px)"}>Slaterhaus</Heading>
+        <Canvas style={dimensions}>
           <RotatingLights/>
           <Suspense>
-            <Model/>
+            <Tree position={[0, -200, -400]} scale={.25}/>
           </Suspense>
         </Canvas>
       </div>
   );
 }
 
-function SpinningMesh() {
-  // This reference will give us direct access to the mesh
-  const mesh = useRef<Mesh>(null!)
-
-
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame(() => {
-    if (mesh.current) {
-      mesh.current.rotation.x = mesh.current.rotation.y += .01;
-    }
-  });
-
-  // Return the view, these are regular three.js elements expressed in JSX
-  return (
-      <mesh
-          ref={mesh}
-          scale={active ? 1.5 : 1}
-          onClick={(event) => setActive(!active)}
-          onPointerOver={(event) => setHover(true)}
-          onPointerOut={(event) => setHover(false)}>
-        <boxGeometry args={[1, 1, 1]}/>
-        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'}/>
-      </mesh>
-  );
-}
