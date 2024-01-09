@@ -3,9 +3,12 @@ import { Canvas } from "@react-three/fiber";
 import { CubeGrid } from "@/components/cube-grid";
 import { Heading } from "@chakra-ui/react";
 import { useState } from "react";
+import PieChartOverlay from "@/components/pie-chart-overlay/pie-chart-overlay";
 
 export default function Home() {
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [showOverlay, setShowOverlay] = useState<boolean>(false);
+
   const onLoaded = () => {
     setTimeout(() => {
       setLoaded(true);
@@ -21,14 +24,8 @@ export default function Home() {
         alignItems: "center",
       }}
     >
-      <Heading
-        position={"absolute"}
-        fontSize={loaded ? "96px": "0"}
-        filter={"drop-shadow(0px 0px 6px)"}
-        transition={"all linear .4s"}
-      >
-        Slaterhaus
-      </Heading>
+      {showOverlay && <PieChartOverlay setShowOverlay={() => setShowOverlay(false)}/>}
+
       <Canvas>
         {/*<spotLight color="white" position={[0, 0, 20]} intensity={500}/>*/}
         <spotLight color="white" position={[0, 0, 5]} intensity={50} />
@@ -39,6 +36,16 @@ export default function Home() {
             <CubeGrid z={-i + 2} onLoaded={onLoaded} />
           ))}
       </Canvas>
+      <Heading
+          position={"absolute"}
+          fontSize={loaded ? "96px": "0"}
+          filter={"drop-shadow(0px 0px 6px)"}
+          transition={"all linear .4s"}
+          cursor={"pointer"}
+          onClick={() => setShowOverlay(true)}
+      >
+        Slaterhaus
+      </Heading>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
+// <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+
 const theme = extendTheme({
   styles: {
     global: {
