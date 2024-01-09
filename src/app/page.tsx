@@ -1,58 +1,28 @@
 "use client";
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { Suspense, useEffect, useRef, useState } from 'react';
-import { Color, DirectionalLight } from 'three';
-// @ts-ignore
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
-import { Container, Heading } from "@chakra-ui/react";
-
-
-const Tree = ({position, scale}: { position: [number, number, number], scale: number } = {position: [0, 0, 0], scale: .25}) => {
-  const fbx = useLoader(FBXLoader, "/objects/prefab_beech_tree_04.fbx");
-  return <primitive object={fbx} scale={.25} position={position} />;
-};
-
-function RotatingLights() {
-  const directionalLightRef = useRef<DirectionalLight>(null!);
-  const directionalLightRef2 = useRef<DirectionalLight>(null!);
-  let time = 0;
-
-  useFrame(() => {
-    if (directionalLightRef.current && directionalLightRef2.current) {
-      time += 0.01;
-
-      const radius = 1000;
-      const x = Math.sin(time) * radius;
-      const y = Math.cos(time) * radius;
-      directionalLightRef.current.intensity = 1
-      directionalLightRef.current.color = new Color(0, 55, 255)
-      directionalLightRef.current.position.set(x, y, 0);
-      directionalLightRef2.current.intensity = 1
-      directionalLightRef2.current.color = new Color(255, 55, 0)
-      directionalLightRef2.current.position.set(y, x, 0);
-    }
-  });
-
-  return (
-      <>
-        <directionalLight ref={directionalLightRef2}/>
-        <directionalLight ref={directionalLightRef}/>
-      </>
-  );
-}
+import { Canvas } from "@react-three/fiber";
+import { CubeGrid } from "@/components/cube-grid";
+import { Heading } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-      <div style={{width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Suspense fallback={<div/>}>
-        <Heading position={"absolute"} mixBlendMode={"difference"} lineHeight={0} fontSize={"10em"} filter={"blur(2px)"}>Slaterhaus</Heading>
+      <div
+          style={{
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+      >
+        <Heading position={"absolute"} fontSize={"128px"} filter={"drop-shadow(0px 0px 6px)"}>
+          Slaterhaus
+        </Heading>
         <Canvas>
-          <RotatingLights/>
-            <Tree position={[0, -200, -400]} scale={.25}/>
+          {/*<ambientLight intensity={1.1} />*/}
+          <spotLight color="white" position={[0, 0, 20]} intensity={500}/>
+          {Array(10).fill(0).map((it, i) => <CubeGrid z={-i}/>)}
 
         </Canvas>
-      </Suspense>
       </div>
   );
 }
-

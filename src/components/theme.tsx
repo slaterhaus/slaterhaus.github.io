@@ -11,31 +11,31 @@ const theme = extendTheme({
         fontDisplay: "swap",
       },
       "html, body": {
-        color: "dark",
-        backgroundColor: "parchment",
+        color: "parchment",
+        backgroundColor: "black",
         fontFamily: "body",
       },
     },
   },
   colors: {
-    primary: "#4A5568",  // Deep blue-gray
-    secondary: "#B794F4",  // Soft lavender
-    accent: "#FBB6CE",  // Pale pink
-    gold: "#D69E2E",  // Gold for accents
-    dark: "#2D3748",  // Rich dark tone
-    parchment: "#FDF5E6",  // Parchment-like off white for backgrounds
+    primary: "#4A5568", // Deep blue-gray
+    secondary: "#B794F4", // Soft lavender
+    accent: "#FBB6CE", // Pale pink
+    gold: "#D69E2E", // Gold for accents
+    dark: "#2D3748", // Rich dark tone
+    parchment: "#FDF5E6", // Parchment-like off white for backgrounds
     // Add more colors as needed
   },
   fonts: {
-    heading: "battlesbridge",  // Ornate serif for headings
-    body: "'Lora', serif",  // Classic serif for body text
+    heading: "battlesbridge", // Ornate serif for headings
+    body: "'Lora', serif", // Classic serif for body text
   },
   components: {
     Link: {
       baseStyle: {
         fontWeight: "bold",
         color: "accent",
-      }
+      },
     },
     Button: {
       baseStyle: {
@@ -45,7 +45,7 @@ const theme = extendTheme({
         letterSpacing: "wider",
       },
       variants: {
-        solid: (props: { colorMode: string; }) => ({
+        solid: (props: { colorMode: string }) => ({
           bg: props.colorMode === "dark" ? "dark" : "parchment",
           color: "gold",
           _hover: {
