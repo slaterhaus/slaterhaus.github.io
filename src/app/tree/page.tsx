@@ -16,7 +16,7 @@ const Tree = (
   return <primitive object={fbx} scale={0.25} position={position} />;
 };
 
-export function RotatingLights() {
+function RotatingLights() {
   const directionalLightRef = useRef<DirectionalLight>(null!);
   const directionalLightRef2 = useRef<DirectionalLight>(null!);
   let time = 0;
