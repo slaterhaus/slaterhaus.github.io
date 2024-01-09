@@ -4,7 +4,7 @@ import { CubeGrid } from "@/components/cube-grid";
 import { Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import PieChartOverlay from "@/components/pie-chart-overlay/pie-chart-overlay";
-import { KeyboardControls, ArcballControls } from "@react-three/drei";
+import { ArcballControls } from "@react-three/drei";
 
 export default function Home() {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -13,7 +13,7 @@ export default function Home() {
   const onLoaded = () => {
     setTimeout(() => {
       setLoaded(true);
-    }, 10)
+    }, 10);
   };
   return (
     <div
@@ -23,10 +23,15 @@ export default function Home() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        userSelect: "none"
+        userSelect: "none",
       }}
     >
-      {showOverlay && <PieChartOverlay setShowOverlay={() => setShowOverlay(false)} showOverlay={showOverlay}/>}
+      {showOverlay && (
+        <PieChartOverlay
+          setShowOverlay={() => setShowOverlay(false)}
+          showOverlay={showOverlay}
+        />
+      )}
 
       <Canvas>
         {/*<spotLight color="white" position={[0, 0, 20]} intensity={500}/>*/}
@@ -40,12 +45,12 @@ export default function Home() {
         <ArcballControls />
       </Canvas>
       <Heading
-          position={"absolute"}
-          fontSize={loaded ? "96px": "0"}
-          filter={"drop-shadow(0px 0px 6px)"}
-          transition={"all linear .4s"}
-          cursor={"pointer"}
-          onClick={() => setShowOverlay(true)}
+        position={"absolute"}
+        fontSize={loaded ? "96px" : "0"}
+        filter={"drop-shadow(0px 0px 6px)"}
+        transition={"all linear .4s"}
+        cursor={"pointer"}
+        onClick={() => setShowOverlay(true)}
       >
         Slaterhaus
       </Heading>
