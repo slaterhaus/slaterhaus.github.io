@@ -2,8 +2,13 @@
 import { Canvas } from "@react-three/fiber";
 import { CubeGrid } from "@/components/cube-grid";
 import { Heading } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function Home() {
+  const [loaded, setLoaded] = useState<boolean>(false)
+  const onLoaded = () => {
+    setLoaded(true);
+  }
   return (
       <div
           style={{
@@ -14,14 +19,12 @@ export default function Home() {
             alignItems: "center",
           }}
       >
-        <Heading position={"absolute"} fontSize={"128px"} filter={"drop-shadow(0px 0px 6px)"}>
+        <Heading position={"absolute"} fontSize={"128px"} filter={"drop-shadow(0px 0px 6px)"} display={loaded ? "": "none"}>
           Slaterhaus
         </Heading>
         <Canvas>
-          {/*<ambientLight intensity={1.1} />*/}
           <spotLight color="white" position={[0, 0, 20]} intensity={500}/>
-          {Array(10).fill(0).map((it, i) => <CubeGrid z={-i}/>)}
-
+          {Array(10).fill(0).map((it, i) => <CubeGrid z={-i} onLoaded={onLoaded} />)}
         </Canvas>
       </div>
   );
