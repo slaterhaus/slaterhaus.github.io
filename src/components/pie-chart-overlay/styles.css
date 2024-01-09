@@ -16,6 +16,7 @@
 .slice {
     font-family: "Great Vibes", sans-serif;
     transition: all ease-in-out 1s;
+    transform: rotate(0deg);
     position: absolute;
     width: 120px; /* Adjust size as needed */
     height: 200px; /* Adjust size as needed */
