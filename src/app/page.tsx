@@ -24,7 +24,7 @@ export default function Home() {
         </Heading>
         <Canvas>
           <spotLight color="white" position={[0, 0, 20]} intensity={500}/>
-          {Array(10).fill(0).map((it, i) => <CubeGrid z={-i} onLoaded={onLoaded} />)}
+          {Array(10).fill(0).map((it, i) => <CubeGrid z={-i + 2} onLoaded={onLoaded} />)}
         </Canvas>
       </div>
   );
