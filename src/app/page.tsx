@@ -66,7 +66,7 @@ export default function Home() {
           intensity={50}
         />
         <EffectComposer>
-          <Autofocus focusRange={0.02} bokehScale={10} />
+          <Autofocus focusRange={0.01} bokehScale={7} />
         </EffectComposer>
         <directionalLight color="blue" position={[0, 5, -5]} intensity={5} />
         <SetCameraPosition
