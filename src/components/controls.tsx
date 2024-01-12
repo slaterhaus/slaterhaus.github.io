@@ -1,6 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { CameraControls, FaceControls, FlyControls, OrbitControls, TrackballControls } from '@react-three/drei';
+import {
+  CameraControls,
+  FaceControls,
+  FlyControls,
+  OrbitControls,
+  TrackballControls,
+} from "@react-three/drei";
 import routes, { RouteConfig } from "@/components/routes";
 
 export default function Controls() {
@@ -15,16 +21,15 @@ export default function Controls() {
 
   switch (config?.controls) {
     case "head":
-
       return <FaceControls />; // Custom component
     case "mouse":
-      return <CameraControls/>;
+      return <CameraControls />;
     case "orbit":
-      return <OrbitControls/>;
+      return <OrbitControls />;
     case "trackball":
-      return <TrackballControls/>;
+      return <TrackballControls />;
     case "fly":
-      return <FlyControls/>;
+      return <FlyControls />;
     default:
       return null;
   }

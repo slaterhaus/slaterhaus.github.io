@@ -23,28 +23,26 @@ export default function Home() {
         .map((it, i) => (
           <CubeGrid z={-i + 2} key={`cube-grid-${i}`} />
         ))}
-      <ambientLight intensity={5} castShadow/>
+      <ambientLight intensity={5} castShadow />
       <Text3D
-          // color="#f0f0f0" // Text color
-          size={1}
-          // maxWidth={200}
-          lineHeight={1}
-          letterSpacing={0.02}
-          // textAlign={'left'}
-          font="/fonts/battlesbridge.json"
-          // anchorX="center"
-          // anchorY="middle"
-          position={new Vector3(-6, 0, -5)}
-          castShadow
-          // material={{
-          //   transparent: true,
-          //   opacity: 0.5
-          // }}
+        // color="#f0f0f0" // Text color
+        size={1}
+        // maxWidth={200}
+        lineHeight={1}
+        letterSpacing={0.02}
+        // textAlign={'left'}
+        font="/fonts/battlesbridge.json"
+        // anchorX="center"
+        // anchorY="middle"
+        position={new Vector3(-6, 0, -5)}
+        castShadow
+        // material={{
+        //   transparent: true,
+        //   opacity: 0.5
+        // }}
       >
         Slaterhaus
       </Text3D>
-
-
     </>
   );
 }

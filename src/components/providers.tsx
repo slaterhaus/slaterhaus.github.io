@@ -8,16 +8,16 @@ import { FaceLandmarker } from "@react-three/drei";
 import { useSearchParams } from "next/navigation";
 import Controls from "@/components/controls";
 
-export function Frontend({children}: { children: React.ReactNode }) {
+export function Frontend({ children }: { children: React.ReactNode }) {
   const controls = useSearchParams().get("controls");
   return (
-      <ChakraProvider theme={theme}>
-        <Canvas shadows>
-          <FaceLandmarker>
-            <Controls/>
-            {children}
-          </FaceLandmarker>
-        </Canvas>
-      </ChakraProvider>
+    <ChakraProvider theme={theme}>
+      <Canvas shadows>
+        <FaceLandmarker>
+          <Controls />
+          {children}
+        </FaceLandmarker>
+      </Canvas>
+    </ChakraProvider>
   );
 }

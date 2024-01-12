@@ -11,8 +11,8 @@ const routes = new Map<string, RouteConfig>();
 
 routes.set("", {
   position: [0, -1, 4.75],
-  rotation: [.33, 0, .0],
-  controls: "head"
+  rotation: [0.33, 0, 0.0],
+  controls: "head",
 });
 /**
  Vector3 {x: -0.04467460926730768, y: -1.5053767911344715, z: 4.7677924552145186}
