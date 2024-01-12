@@ -4,7 +4,7 @@ import { CubeGrid } from "@/components/cube-grid";
 import { Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
+import { EffectComposer, Autofocus } from '@react-three/postprocessing'
 const SetCameraPosition = ({
   position,
   rotation,
@@ -65,6 +65,9 @@ export default function Home() {
           ]}
           intensity={50}
         />
+        <EffectComposer>
+          <Autofocus focusRange={0.02} bokehScale={10} />
+        </EffectComposer>
         <directionalLight color="blue" position={[0, 5, -5]} intensity={5} />
         <SetCameraPosition
           position={cameraPosition}
