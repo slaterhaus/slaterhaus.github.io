@@ -1,5 +1,5 @@
-import { Frontend } from "@/components/providers";
-import { CameraRouter } from "@/components/camera-router";
+import { CameraRouter } from "@/components/routing/camera-router";
+import { Frontend } from "@/components/frontend";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,10 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           userSelect: "none",
         }}
       >
-        <Frontend>
-          <CameraRouter />
-          {children}
-        </Frontend>
+        <Frontend>{children}</Frontend>
       </body>
     </html>
   );

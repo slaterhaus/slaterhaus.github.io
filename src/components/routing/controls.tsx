@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import {
   CameraControls,
   FaceControls,
+  FaceLandmarker,
   FlyControls,
   OrbitControls,
   TrackballControls,
@@ -21,7 +22,11 @@ export default function Controls() {
 
   switch (config?.controls) {
     case "head":
-      return <FaceControls />; // Custom component
+      return (
+        <FaceLandmarker>
+          <FaceControls />
+        </FaceLandmarker>
+      );
     case "mouse":
       return <CameraControls />;
     case "orbit":
