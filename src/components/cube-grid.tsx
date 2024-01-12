@@ -41,7 +41,13 @@ export function Cube({ position }: { position: Vector3 }) {
   );
 }
 
-export function CubeGrid({ z, onLoaded }: { z: number; onLoaded: () => void }) {
+export function CubeGrid({
+  z,
+  onLoaded,
+}: {
+  z: number;
+  onLoaded?: () => void;
+}) {
   const gridSize = 15;
   let cubes = [];
   for (let i = 0; i < gridSize; i++) {
@@ -57,7 +63,7 @@ export function CubeGrid({ z, onLoaded }: { z: number; onLoaded: () => void }) {
       }
     }
   }
-  onLoaded();
+  onLoaded?.();
 
   return <>{cubes}</>;
 }
