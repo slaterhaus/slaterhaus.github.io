@@ -50,7 +50,7 @@ export function CubeGrid({ z, onLoaded }: { z: number; onLoaded: () => void }) {
       if (j > 11 || j < 7) {
         cubes.push(
           <Cube
-            key={`${i}-${j}`}
+            key={`${i}-${j}-${z}`}
             position={new Vector3(i - gridSize / 2, j - gridSize / 2, z)}
           />,
         );

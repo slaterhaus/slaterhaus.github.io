@@ -6,7 +6,7 @@ import { Canvas } from "@react-three/fiber";
 import { ArtPanel } from "@/components/museum/art-panel";
 import { Floor } from "@/components/museum/floor";
 
-function Gallery() {
+export function Gallery() {
   return (
     <div
       style={{
@@ -23,18 +23,10 @@ function Gallery() {
         <ArtPanel
           image={"/img/cora_corn.jpg"}
           color={"white"}
-          position={new Vector3(0, 0, 4)}
+          position={new Vector3(0, 0, 0)}
           rotation={undefined}
           size={undefined}
         />
-        <Floor
-          position={new Vector3(0, 0, 0)}
-          rotation={new Euler(2, 0, 0)}
-          size={[10, 10, 10, 10, 10, 10]}
-          color={"white"}
-        />
-        {/*<OrbitControls />*/}
-        {/*<FirstPersonControls/>*/}
         <CameraControls />
       </Canvas>
     </div>
