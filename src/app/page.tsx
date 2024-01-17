@@ -1,10 +1,7 @@
 "use client";
-import Home from "@/components/views/home";
+import { useGetViewConfig } from "@/routing/routes";
 
 export default function Page() {
-  return (
-    <>
-      <Home />
-    </>
-  );
+  const {Component} = useGetViewConfig();
+  return <Component/>
 }

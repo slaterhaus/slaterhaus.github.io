@@ -1,21 +1,20 @@
-import { CameraRouter } from "@/components/routing/camera-router";
-import { Frontend } from "@/components/frontend";
+import { Client } from "@/components/frontend";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({children}: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body
-        style={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          userSelect: "none",
-        }}
+          style={{
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            userSelect: "none",
+          }}
       >
-        <Frontend>{children}</Frontend>
+      <Client>{children}</Client>
       </body>
-    </html>
+      </html>
   );
 }
