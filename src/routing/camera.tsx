@@ -4,15 +4,15 @@ import { useGetViewConfig } from "@/routing/routes";
 import { useEffect } from "react";
 
 export const Camera = () => {
-  const {camera, set} = useThree();
-  let config = useGetViewConfig()
+  const { camera, set } = useThree();
+  let config = useGetViewConfig();
 
   useEffect(() => {
-    camera.rotation.set(1,2,3)
+    camera.rotation.set(0, 0, 0);
     if (config) {
-      camera.position.set(1,2,3);
-      camera.rotation.set(1,2,3);
+      camera.position.set(...config.position);
+      camera.rotation.set(...config.rotation);
     }
   }, [camera, config]);
-  return <></>
+  return <></>;
 };

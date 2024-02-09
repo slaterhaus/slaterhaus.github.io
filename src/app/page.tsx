@@ -2,6 +2,6 @@
 import { useGetViewConfig } from "@/routing/routes";
 
 export default function Page() {
-  const {Component} = useGetViewConfig();
-  return <Component/>
+  const config = useGetViewConfig();
+  return config?.Component ? <config.Component /> : null
 }

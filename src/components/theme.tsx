@@ -12,10 +12,11 @@ const theme = extendTheme({
         fontStyle: "normal",
         fontDisplay: "swap",
       },
-      "html, body": {
+      "html, body, canvas": {
         color: "parchment",
         backgroundColor: "black",
         fontFamily: "body",
+        height: "100vh"
       },
     },
   },

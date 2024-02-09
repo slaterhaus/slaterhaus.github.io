@@ -16,32 +16,32 @@ export default function Controls() {
   useEffect(() => {
     if (config?.controls !== "head") return;
     navigator.mediaDevices
-        .getUserMedia({video: true})
-        .then((stream) => {
-          setWebcamAvailable(true);
-        })
-        .catch((error) => {
-          setWebcamAvailable(false);
-        });
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        setWebcamAvailable(true);
+      })
+      .catch((error) => {
+        setWebcamAvailable(false);
+      });
   }, []);
 
   switch (config?.controls) {
     case "head":
       return webcamAvailable ? (
-          <FaceLandmarker>
-            <FaceControls/>
-          </FaceLandmarker>
+        <FaceLandmarker>
+          <FaceControls />
+        </FaceLandmarker>
       ) : (
-          <CameraControls/>
+        <CameraControls />
       );
     case "mouse":
-      return <CameraControls/>;
+      return <CameraControls />;
     case "orbit":
-      return <OrbitControls/>;
+      return <OrbitControls />;
     case "trackball":
-      return <TrackballControls/>;
+      return <TrackballControls />;
     case "fly":
-      return <FlyControls/>;
+      return <FlyControls />;
     default:
       return null;
   }
