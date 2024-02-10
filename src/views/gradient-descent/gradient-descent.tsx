@@ -39,11 +39,13 @@ export default function GradientDescent() {
         // Look at the base position of the slide
         // camera.lookAt(basePosition);
     });
-
     return (
         <>
             {slides.map((slide, index) => (
-                <Slide key={index} position={slide.position} content={slide.content} rotation={slide.rotation}/>
+                <Slide key={index} position={slide.position} content={slide.content} rotation={slide.rotation}
+                       active={index === currentSlide}
+                       activeProps={slide.activeProps} inActiveProps={slide.inActiveProps}
+                />
             ))}
         </>
     );

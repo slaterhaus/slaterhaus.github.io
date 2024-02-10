@@ -5,18 +5,32 @@ import {Group, Object3DEventMap} from "three";
 interface Props {
     position: [number, number, number],
     rotation: [number, number, number]
-    content: string
+    content: string,
+    active: boolean,
+    activeProps?: Record<string, any>,
+    inActiveProps?: Record<string, any>
 }
 
-export const Slide = ({position, content, rotation}: Props) => {
-    const ref = useRef<Group<Object3DEventMap>>(null!);
-    // Animation logic can be added here
+const defaults = {
+    fontSize: .25,
+    color: "white",
+    fillOpacity: 1,
+}
 
+function getDisplayProps({active, activeProps, inActiveProps}: Partial<Props>) {
+    return {
+        ...defaults,
+        ...(active ? activeProps : inActiveProps)
+    }
+}
+export const Slide = ({position, content, rotation, ...props}: Props) => {
+    const ref = useRef<Group<Object3DEventMap>>(null!);
+    const displayProps = getDisplayProps(props);
     return (
         <>
         <spotLight position={position}/>
             <group ref={ref} position={position} rotation={rotation}>
-                <Text color="white" fontSize={0.25}>
+                <Text {...displayProps}>
                     {content}
                 </Text>
             </group>
@@ -24,7 +38,10 @@ export const Slide = ({position, content, rotation}: Props) => {
     );
 };
 
-export const slides: { content: string, position: [number, number, number], rotation: [number, number, number] }[] = [
+export const slides: {
+    activeProps?: Record<string, any> | undefined;
+    inActiveProps?: Record<string, any> | undefined;
+    content: string, position: [number, number, number], rotation: [number, number, number] }[] = [
     {
         content: `                 Gradient descent 
                       is an optimization algorithm used 
@@ -53,4 +70,22 @@ export const slides: { content: string, position: [number, number, number], rota
         position: [300, 0, 0],
         rotation: [0, 0, 0]
     },
+    {
+        content: `Now for some something different`,
+        position: [400, 0, 0],
+        rotation: [0, 0, 0],
+    },
+    {
+        content: `Now for some something different`,
+        position: [400, 0, -10],
+        rotation: [0, 0, 0],
+        activeProps: {
+            color: "white"
+        },
+        inActiveProps: {
+            fillOpacity: .001,
+            fontSize: 2
+        }
+    }
+
 ];

@@ -1,3 +1,9 @@
+"use client";
+import {useGetViewConfig} from "@/routing/routes";
+import {Client} from "@/components/frontend";
+
 export default function Page() {
-    return <h1>index</h1>;
+    const config = useGetViewConfig();
+    if (config?.Component) return <Client><config.Component /></Client>
+    return <h1>Doesn't look like anything to me</h1>;
 }
