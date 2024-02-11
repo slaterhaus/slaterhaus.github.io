@@ -1,7 +1,7 @@
 "use client";
 import { useGetViewConfig } from "@/routing/routes";
+import {redirect} from "next/navigation";
 
 export default function Page() {
-
-  return <h1>Nothing to see here</h1>;
+  return redirect('/p/?view=home')
 }

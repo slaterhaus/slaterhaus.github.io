@@ -32,7 +32,7 @@ export default function Home() {
                     setColor(new Color(Math.random(), Math.random(), Math.random()))
                 }}
             >
-                Cora Slater
+                Slaterhaus
                 <meshStandardMaterial attach="material" color={color}/>
 
             </Text3D>

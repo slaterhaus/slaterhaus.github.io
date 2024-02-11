@@ -1,8 +1,7 @@
 import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
-import * as THREE from 'three';
-import {Mesh} from "three";
+
 
 // Balloon component
 const Balloon = ({ position, color }: {[key: string]: any}) => {
@@ -30,19 +29,20 @@ const BalloonClump = () => {
     // Generate random positions for the balloons
     const balloons = useMemo(() => {
         return [...Array(10)].map(() => ({
-            position: [Math.random() * 4 - 2, Math.random() * 4 - 2, Math.random() * 4 - 2],
+            position: [Math.random() * 10, Math.random() * 10, Math.random() * 10],
             color: `hsl(${Math.random() * 360}, 100%, 70%)`,
         }));
     }, []);
 
+
     return (
-        <Canvas>
+        <>
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} />
             {balloons.map((balloon, index) => (
                 <Balloon key={index} position={balloon.position} color={balloon.color} />
             ))}
-        </Canvas>
+        </>
     );
 };
 
