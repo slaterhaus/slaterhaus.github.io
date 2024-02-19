@@ -20,13 +20,17 @@
     "leva": "^0.9.35",
     "next": "14.0.4",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
+    "react-katex": "^3.0.1",
+    "react-latex-next": "^2.2.0",
     "three": "^0.160.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-katex": "^3.0.4",
     "@types/three": "^0.160.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
