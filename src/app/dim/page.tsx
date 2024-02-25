@@ -15,7 +15,18 @@ import {
 import {BlockMath} from 'react-katex';
 import 'katex/dist/katex.min.css'; // Ensure this is imported
 
-import {Box, ChakraProvider, Container, FormControl, FormLabel, Input, VStack, Text, HStack} from "@chakra-ui/react";
+import {
+    Box,
+    ChakraProvider,
+    Container,
+    FormControl,
+    FormLabel,
+    Input,
+    VStack,
+    Text,
+    HStack,
+    Heading
+} from "@chakra-ui/react";
 import {debounce} from "chart.js/helpers"; // Import the react-latex-next library
 
 
@@ -201,65 +212,71 @@ const InvestmentPage = () => {
         <ChakraProvider>
             <Container maxW="container.lg">
                 <VStack spacing={1} align="stretch">
-                    <FormControl>
-                        <FormLabel>Base Investment:</FormLabel>
-                        <Input type="number" value={baseInvestment}
-                               onChange={(e) => setBaseInvestment(Number(e.target.value))}
-                               placeholder="Base Investment"/>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>A:</FormLabel>
-                        <Input type="number" value={a} onChange={(e) => setA(Number(e.target.value))} step={0.01}
-                               placeholder="A"/>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>B:</FormLabel>
-                        <Input type="number" value={b} onChange={(e) => setB(Number(e.target.value))} placeholder="B"
-                               step={0.01}/>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel>C:</FormLabel>
-                        <Input type="number" value={c} onChange={(e) => setC(Number(e.target.value))} placeholder="C"
-                               step={0.01}/>
-                    </FormControl>
-                    <HStack>
+                    <Heading>Dynamic Investment Calculator</Heading>
+                    <Box p={5} shadow="md" borderWidth="1px">
                         <FormControl>
-                            <FormLabel>Minimum Multiplier:</FormLabel>
-                            <Input type="number" value={minMultiplier}
-                                   onChange={(e) => setMinimumMultiplier(Number(e.target.value))}
-                                   placeholder="Minimum Multiplier"/>
+                            <FormLabel>Base Investment:</FormLabel>
+                            <Input type="number" value={baseInvestment}
+                                   onChange={(e) => setBaseInvestment(Number(e.target.value))}
+                                   placeholder="Base Investment"/>
                         </FormControl>
                         <FormControl>
-                            <FormLabel>Maximum Multiplier:</FormLabel>
-                            <Input type="number" value={maxMultiplier}
-                                   onChange={(e) => setMaximumMultiplier(Number(e.target.value))}
-                                   placeholder="Maximum Multiplier"/>
+                            <FormLabel>A:</FormLabel>
+                            <Input type="number" value={a} onChange={(e) => setA(Number(e.target.value))} step={0.01}
+                                   placeholder="A"/>
                         </FormControl>
-                    </HStack>
-                    <HStack>
                         <FormControl>
-                            <FormLabel>Ticker:</FormLabel>
-                            <Input
-                                type="text"
-                                value={ticker}
-                                onChange={(e) => setTicker(e.target.value)}
-                                placeholder="Enter stock ticker"
-                            />
+                            <FormLabel>B:</FormLabel>
+                            <Input type="number" value={b} onChange={(e) => setB(Number(e.target.value))}
+                                   placeholder="B"
+                                   step={0.01}/>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>C:</FormLabel>
+                            <Input type="number" value={c} onChange={(e) => setC(Number(e.target.value))}
+                                   placeholder="C"
+                                   step={0.01}/>
                         </FormControl>
 
-                    </HStack>
+                        <HStack>
+                            <FormControl>
+                                <FormLabel>Minimum Multiplier:</FormLabel>
+                                <Input type="number" value={minMultiplier}
+                                       onChange={(e) => setMinimumMultiplier(Number(e.target.value))}
+                                       placeholder="Minimum Multiplier"/>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Maximum Multiplier:</FormLabel>
+                                <Input type="number" value={maxMultiplier}
+                                       onChange={(e) => setMaximumMultiplier(Number(e.target.value))}
+                                       placeholder="Maximum Multiplier"/>
+                            </FormControl>
+                        </HStack>
+                        <HStack>
+                            <FormControl>
+                                <FormLabel>Ticker:</FormLabel>
+                                <Input
+                                    type="text"
+                                    value={ticker}
+                                    onChange={(e) => setTicker(e.target.value)}
+                                    placeholder="Enter stock ticker"
+                                />
+                            </FormControl>
 
-                    <HStack>
-                    <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
-                        <Text mb={4}>Investment Equation:</Text>
-                        <BlockMath math={equation}/>
+                        </HStack>
                     </Box>
+
+                    <HStack>
                         <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
-                        <VStack>
-                            <Text>Current Price: ${currentPrice.toFixed(2)}</Text>
-                            <Text>Percentage Difference: {percentageDiff.toFixed(2)}%</Text>
-                            <Text>Calculated Investment Amount: ${investmentAmount.toFixed(2)}</Text>
-                        </VStack>
+                            <Text mb={4}>Investment Equation:</Text>
+                            <BlockMath math={equation}/>
+                        </Box>
+                        <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
+                            <VStack align={"left"}>
+                                <Text>Current Price: ${currentPrice.toFixed(2)}</Text>
+                                <Text>Percentage Difference: {percentageDiff.toFixed(2)}%</Text>
+                                <Text fontWeight={"bold"}>Calculated Investment Amount: ${investmentAmount.toFixed(2)}</Text>
+                            </VStack>
                         </Box>
                     </HStack>
 
