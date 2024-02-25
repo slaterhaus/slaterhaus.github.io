@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import {ChartData, ChartOptions} from "chart.js";
 import {
@@ -12,10 +12,11 @@ import {
     Tooltip,
     Legend
 } from 'chart.js';
-import { BlockMath } from 'react-katex';
+import {BlockMath} from 'react-katex';
 import 'katex/dist/katex.min.css'; // Ensure this is imported
 
-import {Box, ChakraProvider, Container, FormControl, FormLabel, Input, VStack, Text, HStack} from "@chakra-ui/react"; // Import the react-latex-next library
+import {Box, ChakraProvider, Container, FormControl, FormLabel, Input, VStack, Text, HStack} from "@chakra-ui/react";
+import {debounce} from "chart.js/helpers"; // Import the react-latex-next library
 
 
 // Register the components
@@ -84,6 +85,7 @@ function calculateInvestment({
 
     // Calculate the raw multiplier using an adjusted exponential decay formula
     // Adjust 'b' to control the sensitivity of the investment to percentage_diff
+    if (!percentageDiff) return baseInvestment
     let multiplier: number = a * Math.exp(-b * Math.abs(percentageDiff)) + c;
 
     // Modify multiplier based on the direction of percentage_diff
@@ -112,14 +114,46 @@ const InvestmentPage = () => {
     const [minMultiplier, setMinimumMultiplier] = useState<number>(0.1);
     const [maxMultiplier, setMaximumMultiplier] = useState<number>(4);
     const [chartData, setChartData] = useState<ChartData<'line'>>(initialChartData);
-    const percentageDiff = -0.12;
+    const [ticker, setTicker] = useState<string>(''); // New state hook for ticker input
+    const [investmentAmount, setInvestmentAmount] = useState<number>(0); // State hook to store the calculated investment amount
+
+    const fetchStockData = async (ticker: string) => {
+        try {
+            const response = await fetch(`https://vantage-proxy.vercel.app/api/stocks/price-and-average/?symbol=${ticker}`);
+            const data = await response.json();
+            const {percentDifference} = data;
+            const investment = calculateInvestment({
+                baseInvestment,
+                percentageDiff: percentDifference,
+                a,
+                b,
+                c,
+                minMultiplier,
+                maxMultiplier
+            });
+            setInvestmentAmount(investment);
+        } catch (error) {
+            console.error('Error fetching stock data:', error);
+        }
+    };
+
+    // Debounced version of fetchStockData to limit API calls
+    const debouncedFetchStockData = useCallback(debounce(fetchStockData, 500), []);
+
+    // Effect hook to call the API when the ticker value changes
+    useEffect(() => {
+        if (ticker) {
+            debouncedFetchStockData(ticker);
+        }
+    }, [ticker, debouncedFetchStockData]);
+
 
 // Construct the LaTeX string
     const lead = "The investment amount is caulcated as: "
     let equation = `m(p) = `;
-    equation += a === 1 ? "": `${a} \\cdot `
+    equation += a === 1 ? "" : `${a} \\cdot `
     equation += `e^{-${b}p}`
-    equation += c ? ` + ${c}`: ""
+    equation += c ? ` + ${c}` : ""
 
 
 // The rest of your component code remains the same
@@ -198,11 +232,25 @@ const InvestmentPage = () => {
                                    placeholder="Maximum Multiplier"/>
                         </FormControl>
                     </HStack>
+                    <HStack>
+                        <FormControl>
+                            <FormLabel>Ticker:</FormLabel>
+                            <Input
+                                type="text"
+                                value={ticker}
+                                onChange={(e) => setTicker(e.target.value)}
+                                placeholder="Enter stock ticker"
+                            />
+                        </FormControl>
+
+                        {/* Display the calculated investment amount */}
+                        <Text>Calculated Investment Amount: {investmentAmount}</Text>
+                    </HStack>
 
                     {/* Display the LaTeX equation */}
                     <Box p={5} shadow="md" borderWidth="1px">
                         <Text mb={4}>Investment Equation:</Text>
-                        <BlockMath math={equation} />
+                        <BlockMath math={equation}/>
                     </Box>
 
                     {/* Display the chart */}
@@ -212,7 +260,7 @@ const InvestmentPage = () => {
                     </Box>
                 </VStack>
             </Container>
-            // </ChakraProvider>
+        </ChakraProvider>
     );
 };
 
