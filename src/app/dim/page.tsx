@@ -116,12 +116,16 @@ const InvestmentPage = () => {
     const [chartData, setChartData] = useState<ChartData<'line'>>(initialChartData);
     const [ticker, setTicker] = useState<string>(''); // New state hook for ticker input
     const [investmentAmount, setInvestmentAmount] = useState<number>(0); // State hook to store the calculated investment amount
+    const [percentageDiff, setPercentageDiff] = useState<number>(0);
+    const [currentPrice, setCurrentPrice] = useState<number>(0)
 
     const fetchStockData = async (ticker: string) => {
         try {
             const response = await fetch(`https://vantage-proxy.vercel.app/api/stocks/price-and-average/?symbol=${ticker}`);
             const data = await response.json();
-            const {percentDifference} = data;
+            const {percentDifference, latestPrice, movingAverage} = data;
+            setCurrentPrice(latestPrice);
+            setPercentageDiff(percentDifference);
             const investment = calculateInvestment({
                 baseInvestment,
                 percentageDiff: percentDifference,
@@ -243,18 +247,22 @@ const InvestmentPage = () => {
                             />
                         </FormControl>
 
-                        {/* Display the calculated investment amount */}
-                        <Text>Calculated Investment Amount: {investmentAmount}</Text>
                     </HStack>
 
-                    {/* Display the LaTeX equation */}
-                    <Box p={5} shadow="md" borderWidth="1px">
+                    <HStack>
+                    <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
                         <Text mb={4}>Investment Equation:</Text>
                         <BlockMath math={equation}/>
                     </Box>
+                        <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
+                        <VStack>
+                            <Text>Current Price: ${currentPrice.toFixed(2)}</Text>
+                            <Text>Percentage Difference: {percentageDiff.toFixed(2)}%</Text>
+                            <Text>Calculated Investment Amount: ${investmentAmount.toFixed(2)}</Text>
+                        </VStack>
+                        </Box>
+                    </HStack>
 
-                    {/* Display the chart */}
-                    {/* Ensure you wrap the chart component to control its size and styling */}
                     <Box p={5} shadow="md" borderWidth="1px">
                         <Line data={chartData} options={chartOptions}/>
                     </Box>
