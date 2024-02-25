@@ -129,6 +129,7 @@ const InvestmentPage = () => {
     const [investmentAmount, setInvestmentAmount] = useState<number>(0); // State hook to store the calculated investment amount
     const [percentageDiff, setPercentageDiff] = useState<number>(0);
     const [currentPrice, setCurrentPrice] = useState<number>(0)
+    const [simpleMovingAverage, setSimpleMovingAverage] = useState<number>(0)
 
     const fetchStockData = async (ticker: string) => {
         try {
@@ -137,16 +138,7 @@ const InvestmentPage = () => {
             const {percentDifference, latestPrice, movingAverage} = data;
             setCurrentPrice(latestPrice);
             setPercentageDiff(percentDifference);
-            const investment = calculateInvestment({
-                baseInvestment,
-                percentageDiff: percentDifference,
-                a,
-                b,
-                c,
-                minMultiplier,
-                maxMultiplier
-            });
-            setInvestmentAmount(investment);
+            setSimpleMovingAverage(movingAverage)
         } catch (error) {
             console.error('Error fetching stock data:', error);
         }
@@ -169,10 +161,6 @@ const InvestmentPage = () => {
     equation += a === 1 ? "" : `${a} \\cdot `
     equation += `e^{-${b}p}`
     equation += c ? ` + ${c}` : ""
-
-
-// The rest of your component code remains the same
-
 
     const updateChart = () => {
         const labels = [];
@@ -206,7 +194,17 @@ const InvestmentPage = () => {
 
     useEffect(() => {
         updateChart();
-    }, [baseInvestment, a, b, c, minMultiplier, maxMultiplier]);
+        const investment = calculateInvestment({
+            baseInvestment,
+            percentageDiff,
+            a,
+            b,
+            c,
+            minMultiplier,
+            maxMultiplier
+        });
+        setInvestmentAmount(investment);
+    }, [baseInvestment, a, b, c, minMultiplier, maxMultiplier, percentageDiff]);
 
     return (
         <ChakraProvider>
@@ -274,6 +272,7 @@ const InvestmentPage = () => {
                         <Box p={6} shadow="md" borderWidth="1px" width={"50%"}>
                             <VStack align={"left"}>
                                 <Text>Current Price: ${currentPrice.toFixed(2)}</Text>
+                                <Text>100 Day Moving Average: ${simpleMovingAverage.toFixed(2)}</Text>
                                 <Text>Percentage Difference: {percentageDiff.toFixed(2)}%</Text>
                                 <Text fontWeight={"bold"}>Calculated Investment Amount: ${investmentAmount.toFixed(2)}</Text>
                             </VStack>
