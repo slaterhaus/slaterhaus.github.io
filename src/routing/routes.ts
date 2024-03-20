@@ -5,6 +5,7 @@ import GradientDescent from "@/views/gradient-descent/gradient-descent";
 import {useRouter} from "next/router";
 import {AutoFocusProps} from "react-focus-lock/interfaces";
 import Spheres from "@/views/spheres/spheres";
+import TimeDilation from "@/views/time-dilation/time-dilation";
 
 interface DepthOfFieldProps {
     bokehScale?: number,
@@ -75,6 +76,13 @@ routes.set("spheres", {
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     Component: Spheres,
+});
+routes.set("time-dilation", {
+    controls: 'orbit',
+    position: [-20, 0, 0],
+    rotation: [0, 0, 0],
+    Component: TimeDilation
+
 })
 export const useGetViewConfig = (): RouteConfig | undefined => {
     const view = useRouter()?.query?.view;
