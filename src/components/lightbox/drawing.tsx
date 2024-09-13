@@ -2,12 +2,45 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
 import Webcam from 'react-webcam';
 
+interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
+    requestPermission?: () => Promise<PermissionState>;
+}
+type DeviceOrientationEventiOSConstructor = {
+    new(type: string, eventInitDict?: DeviceOrientationEventInit): DeviceOrientationEventiOS;
+    requestPermission?: () => Promise<PermissionState>;
+};
 const ImageDrawingComponent = () => {
     const webcamRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState<any>(null);
     const [opacity, setOpacity] = useState(0.5);
     const [orientation, setOrientation] = useState({ alpha: 0, beta: 0, gamma: 0 });
     const [currentCamera, setCurrentCamera] = useState('user');
+    const [orientationPermission, setOrientationPermission] = useState('unknown');
+
+    const handleOrientation = (event: { alpha: any; beta: any; gamma: any; }) => {
+        setOrientation({
+            alpha: event.alpha || 0, // Z-axis rotation [0,360)
+            beta: event.beta || 0,   // X-axis rotation [-180,180]
+            gamma: event.gamma || 0  // Y-axis rotation [-90,90]
+        });
+    };
+
+    const requestPermission = useCallback(async () => {
+        if (typeof (DeviceOrientationEvent as DeviceOrientationEventiOSConstructor).requestPermission === 'function') {
+            try {
+                if (!DeviceOrientationEvent) return;
+                const permission = await (DeviceOrientationEvent as any)?.requestPermission();
+                if (permission === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                }
+            } catch (error) {
+                console.error('Error requesting device orientation permission:', error);
+            }
+        } else {
+            // For non-iOS devices or older versions that don't require permission
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
+    }, [handleOrientation]);
 
     const handleImageChange = (event: React.ChangeEvent<any>) => {
         const file = event.target.files?.[0];
@@ -30,17 +63,8 @@ const ImageDrawingComponent = () => {
         return `rotateZ(${alpha}deg) rotateX(${beta}deg) rotateY(${gamma}deg)`;
     };
     useEffect(() => {
-        if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
-            const handleOrientation = (event: { alpha: any; beta: any; gamma: any; }) => {
-                setOrientation({
-                    alpha: event.alpha || 0, // Z-axis rotation [0,360)
-                    beta: event.beta || 0,   // X-axis rotation [-180,180]
-                    gamma: event.gamma || 0  // Y-axis rotation [-90,90]
-                });
-            };
-
+        if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window && orientationPermission === 'granted' ) {
             window.addEventListener('deviceorientation', handleOrientation, true);
-
             return () => {
                 window.removeEventListener('deviceorientation', handleOrientation, true);
             };
@@ -77,9 +101,10 @@ const ImageDrawingComponent = () => {
                     }}
                 />
             )}
-            <div style={{ position: 'absolute', top: 10, left: 10 }}>
+            <div style={{position: 'absolute', top: 10, left: 10}}>
                 <pre>{JSON.stringify(orientation)}</pre>
-                <input type="file" accept="image/*" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)} />
+                <input type="file" accept="image/*"
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)}/>
                 <input
                     type="range"
                     min="0"
@@ -88,6 +113,11 @@ const ImageDrawingComponent = () => {
                     value={opacity}
                     onChange={handleOpacityChange}
                 />
+                <button
+                    onClick={requestPermission}
+                >
+                    Request Orientation Permission
+                </button>
             </div>
         </div>
     );
