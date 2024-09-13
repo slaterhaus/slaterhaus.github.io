@@ -2,39 +2,27 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
 import Webcam from 'react-webcam';
 
-const constraints = {
-    video: {
-        facingMode: 'environment'
-    }
-};
-
-navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-        // Use the stream
-    })
-    .catch(error => {
-        console.error('Error accessing the camera', error);
-    });
-
 const ImageDrawingComponent = () => {
     const webcamRef = useRef(null);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState<any>(null);
     const [opacity, setOpacity] = useState(0.5);
     const [orientation, setOrientation] = useState({ alpha: 0, beta: 0, gamma: 0 });
     const [currentCamera, setCurrentCamera] = useState('user');
 
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
+    const handleImageChange = (event: React.ChangeEvent<any>) => {
+        const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => {
-                setSelectedImage(e.target.result);
+            reader.onload = (e: ProgressEvent<FileReader>) => {
+                if (e?.target?.result !== null) {
+                    setSelectedImage(e?.target?.result);
+                }
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleOpacityChange = (e) => {
+    const handleOpacityChange = (e: { target: { value: string; }; }) => {
         setOpacity(parseFloat(e.target.value));
     };
     const getImageTransform = () => {
@@ -43,7 +31,7 @@ const ImageDrawingComponent = () => {
     };
     useEffect(() => {
         if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
-            const handleOrientation = (event) => {
+            const handleOrientation = (event: { alpha: any; beta: any; gamma: any; }) => {
                 setOrientation({
                     alpha: event.alpha || 0, // Z-axis rotation [0,360)
                     beta: event.beta || 0,   // X-axis rotation [-180,180]
@@ -91,7 +79,7 @@ const ImageDrawingComponent = () => {
             )}
             <div style={{ position: 'absolute', top: 10, left: 10 }}>
                 <pre>{JSON.stringify(orientation)}</pre>
-                <input type="file" accept="image/*" onChange={handleImageChange} />
+                <input type="file" accept="image/*" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)} />
                 <input
                     type="range"
                     min="0"
