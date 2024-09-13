@@ -76,6 +76,14 @@ routes.set("spheres", {
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     Component: Spheres,
+    postProcessing: {
+        bloom: true,
+        depthOfField: {
+            focusDistance: 10,
+            focusRange: 90,
+            bokehScale: 200
+        },
+    }
 });
 routes.set("time-dilation", {
     controls: 'orbit',

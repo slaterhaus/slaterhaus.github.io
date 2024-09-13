@@ -30,14 +30,14 @@ export default function GradientDescent() {
         // Calculate the desired position by adding the offset
         const desiredPosition = basePosition.add(cameraOffset);
 
-        // Smoothly interpolate the camera's position
+        // Smoothly interpolate the camera.tsx's position
         camera.position.lerp(desiredPosition, 0.1);
 
         const baseRotation = slides[currentSlide].rotation;
         camera.rotation.set(...slides[currentSlide].rotation);
 
         // Look at the base position of the slide
-        // camera.lookAt(basePosition);
+        // camera.tsx.lookAt(basePosition);
     });
     return (
         <>

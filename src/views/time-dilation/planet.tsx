@@ -16,7 +16,7 @@ interface PlanetInterface {
 export function Planet({ distance, period, G, M, c }: PlanetInterface) {
     const meshRef = useRef<Mesh>(null!);
     const [color, setColor] = useState<string>()
-    const { camera } = useThree();  // Access the camera
+    const { camera } = useThree();  // Access the camera.tsx
 
 
     useFrame(({ clock }) => {

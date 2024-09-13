@@ -80,7 +80,7 @@ export const slides: SlideProps[] = [
         }
     },
     {
-        content: "TODO: fix Euler angles so camera tracks rotation better",
+        content: "TODO: fix Euler angles so camera.tsx tracks rotation better",
         position: [10,0,0],
         rotation: [.22,.1,.5],
         inActiveProps: {
