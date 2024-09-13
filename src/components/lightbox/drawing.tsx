@@ -2,11 +2,26 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
 import Webcam from 'react-webcam';
 
+const constraints = {
+    video: {
+        facingMode: 'environment'
+    }
+};
+
+navigator.mediaDevices.getUserMedia(constraints)
+    .then(stream => {
+        // Use the stream
+    })
+    .catch(error => {
+        console.error('Error accessing the camera', error);
+    });
+
 const ImageDrawingComponent = () => {
     const webcamRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [opacity, setOpacity] = useState(0.5);
     const [orientation, setOrientation] = useState({ alpha: 0, beta: 0, gamma: 0 });
+    const [currentCamera, setCurrentCamera] = useState('user');
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -50,6 +65,7 @@ const ImageDrawingComponent = () => {
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
+                videoConstraints={{facingMode: 'environment'}}
                 style={{
                     width: '100%',
                     height: '100%',
