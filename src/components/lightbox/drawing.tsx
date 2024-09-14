@@ -9,18 +9,26 @@ type DeviceOrientationEventiOSConstructor = {
     new(type: string, eventInitDict?: DeviceOrientationEventInit): DeviceOrientationEventiOS;
     requestPermission?: () => Promise<PermissionState>;
 };
+
+interface Orientation {
+    alpha?: number;
+    beta?: number;
+    gamma?: number;
+}
 const ImageDrawingComponent = () => {
     const webcamRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState<any>(null);
     const [opacity, setOpacity] = useState(0.5);
-    const [orientation, setOrientation] = useState({ beta: 0 });
+    const [orientation, setOrientation] = useState<Orientation>({ alpha: 0,beta: 0, gamma: 0 });
     const [currentCamera, setCurrentCamera] = useState('user');
     const [orientationPermission, setOrientationPermission] = useState('unknown');
 
-    const handleOrientation = (event: { beta: any; }) => {
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+        const isPortrait = screen.orientation.type.includes('portrait');
         setOrientation({
-            beta: event.beta || 0, // Z-axis rotation [0,360)
-
+            alpha: event.alpha || 0,
+            beta: isPortrait ? (event.beta || 0) : 0,
+            gamma: !isPortrait ? (event.gamma || 0) : 0,
         });
     };
 
@@ -58,9 +66,10 @@ const ImageDrawingComponent = () => {
         setOpacity(parseFloat(e.target.value));
     };
     const getImageTransform = () => {
-        const { beta } = orientation;
-        return `rotateZ(${0}deg) rotateX(${-beta}deg) rotateY(${0}deg)`;
+        const { alpha = 0, beta = 0, gamma = 0 } = orientation;
+        return `rotateZ(${-alpha}deg) rotateX(${-beta}deg) rotateY(${-gamma}deg)`;
     };
+
     useEffect(() => {
         if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window && orientationPermission === 'granted' ) {
             window.addEventListener('deviceorientation', handleOrientation, true);
