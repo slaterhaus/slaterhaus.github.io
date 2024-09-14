@@ -1,42 +1,41 @@
 "use client";
-import React, {useRef, useState, useCallback, useEffect} from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import Webcam from 'react-webcam';
 
 interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
     requestPermission?: () => Promise<PermissionState>;
 }
+
 type DeviceOrientationEventiOSConstructor = {
     new(type: string, eventInitDict?: DeviceOrientationEventInit): DeviceOrientationEventiOS;
     requestPermission?: () => Promise<PermissionState>;
 };
 
-interface Orientation {
-    alpha?: number;
-    beta?: number;
-    gamma?: number;
-}
 const ImageDrawingComponent = () => {
     const webcamRef = useRef(null);
-    const [selectedImage, setSelectedImage] = useState<any>(null);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [opacity, setOpacity] = useState(0.5);
-    const [orientation, setOrientation] = useState<Orientation>({ alpha: 0,beta: 0, gamma: 0 });
-    const [currentCamera, setCurrentCamera] = useState('user');
+    const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 });
+    const [deviceOrientation, setDeviceOrientation] = useState('portrait');
+    const [currentCamera, setCurrentCamera] = useState('environment');
     const [orientationPermission, setOrientationPermission] = useState('unknown');
 
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-        const isPortrait = screen.orientation.type.includes('portrait');
+    const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
         setOrientation({
-            alpha: event.alpha || 0,
-            beta: isPortrait ? (event.beta || 0) : 0,
-            gamma: !isPortrait ? (event.gamma || 0) : 0,
+            beta: event.beta || 0,
+            gamma: event.gamma || 0,
         });
-    };
+
+        setDeviceOrientation(
+            window.screen.orientation.type.includes('landscape') ? 'landscape' : 'portrait'
+        );
+    }, []);
 
     const requestPermission = useCallback(async () => {
         if (typeof (DeviceOrientationEvent as DeviceOrientationEventiOSConstructor).requestPermission === 'function') {
             try {
-                if (!DeviceOrientationEvent) return;
-                const permission = await (DeviceOrientationEvent as any)?.requestPermission();
+                const permission = await (DeviceOrientationEvent as any).requestPermission();
+                setOrientationPermission(permission);
                 if (permission === 'granted') {
                     window.addEventListener('deviceorientation', handleOrientation);
                 }
@@ -45,39 +44,45 @@ const ImageDrawingComponent = () => {
             }
         } else {
             // For non-iOS devices or older versions that don't require permission
+            setOrientationPermission('granted');
             window.addEventListener('deviceorientation', handleOrientation);
         }
     }, [handleOrientation]);
 
-    const handleImageChange = (event: React.ChangeEvent<any>) => {
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e: ProgressEvent<FileReader>) => {
-                if (e?.target?.result !== null) {
-                    setSelectedImage(e?.target?.result);
+                if (e?.target?.result && typeof e.target.result === 'string') {
+                    setSelectedImage(e.target.result);
                 }
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleOpacityChange = (e: { target: { value: string; }; }) => {
+    const handleOpacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setOpacity(parseFloat(e.target.value));
     };
+
     const getImageTransform = () => {
-        const { alpha = 0, beta = 0, gamma = 0 } = orientation;
-        return `rotateZ(${-alpha}deg) rotateX(${-beta}deg) rotateY(${-gamma}deg)`;
+        const { beta, gamma } = orientation;
+        if (deviceOrientation === 'portrait') {
+            return `rotateX(${-beta}deg)`;
+        } else {
+            return `rotateY(${gamma}deg)`;
+        }
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window && orientationPermission === 'granted' ) {
+        if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window && orientationPermission === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation, true);
             return () => {
                 window.removeEventListener('deviceorientation', handleOrientation, true);
             };
         }
-    }, []);
+    }, [orientationPermission, handleOrientation]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
@@ -85,7 +90,7 @@ const ImageDrawingComponent = () => {
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
-                videoConstraints={{facingMode: 'environment'}}
+                videoConstraints={{ facingMode: currentCamera }}
                 style={{
                     width: '100%',
                     height: '100%',
@@ -106,13 +111,13 @@ const ImageDrawingComponent = () => {
                         transform: getImageTransform(),
                         objectFit: 'contain',
                         pointerEvents: 'none',
+                        transformOrigin: 'center',
                     }}
                 />
             )}
-            <div style={{position: 'absolute', top: 10, left: 10}}>
-                <pre>{JSON.stringify(orientation)}</pre>
-                <input type="file" accept="image/*"
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)}/>
+            <div style={{ position: 'absolute', top: 10, left: 10, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', padding: '10px' }}>
+                <pre>{JSON.stringify({ orientation, deviceOrientation }, null, 2)}</pre>
+                <input type="file" accept="image/*" onChange={handleImageChange} />
                 <input
                     type="range"
                     min="0"
@@ -121,9 +126,7 @@ const ImageDrawingComponent = () => {
                     value={opacity}
                     onChange={handleOpacityChange}
                 />
-                <button
-                    onClick={requestPermission}
-                >
+                <button onClick={requestPermission}>
                     Request Orientation Permission
                 </button>
             </div>
