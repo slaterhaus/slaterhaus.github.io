@@ -20,15 +20,23 @@ const ImageDrawingComponent = () => {
     const [currentCamera, setCurrentCamera] = useState('environment');
     const [orientationPermission, setOrientationPermission] = useState('unknown');
 
+    const handleOrientationChange = useCallback(() => {
+        setDeviceOrientation(
+            window.screen.orientation.type.includes('landscape') ? 'landscape' : 'portrait'
+        );
+    }, []);
+
+    useEffect(() => {
+        handleOrientationChange(); // Initial check
+        window.addEventListener('orientationchange', handleOrientationChange);
+        return () => window.removeEventListener('orientationchange', handleOrientationChange);
+    }, [handleOrientationChange]);
+
     const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
         setOrientation({
             beta: event.beta || 0,
             gamma: event.gamma || 0,
         });
-
-        setDeviceOrientation(
-            window.screen.orientation.type.includes('landscape') ? 'landscape' : 'portrait'
-        );
     }, []);
 
     const requestPermission = useCallback(async () => {
@@ -69,9 +77,9 @@ const ImageDrawingComponent = () => {
     const getImageTransform = () => {
         const { beta, gamma } = orientation;
         if (deviceOrientation === 'portrait') {
-            return `rotateX(${-beta}deg)`;
+            return `rotateX(${-beta}deg) rotateY(${gamma}deg)`;
         } else {
-            return `rotateY(${gamma}deg)`;
+            return `rotateY(${beta}deg) rotateX(${-gamma}deg)`;
         }
     };
 
