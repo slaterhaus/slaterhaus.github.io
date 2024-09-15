@@ -86,7 +86,7 @@ const VideoPlayback = ({ videoBlob }: VideoPlaybackProps) => {
 
     return (
         <div>
-            <video ref={videoRef} src={videoUrl || ''} preload="metadata"/>
+            <video ref={videoRef} src={videoUrl || ''} preload="metadata" loop={true}/>
             <div>
                 <label>
                     Start Time:
