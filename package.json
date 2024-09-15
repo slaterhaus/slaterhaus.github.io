@@ -25,10 +25,13 @@
     "react-dom": "^18",
     "react-katex": "^3.0.1",
     "react-latex-next": "^2.2.0",
+    "react-record-webcam": "^1.1.5",
     "react-webcam": "^7.2.0",
+    "sass": "^1.78.0",
     "three": "^0.160.0"
   },
   "devDependencies": {
+    "@types/dom-mediacapture-record": "^1.0.19",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
