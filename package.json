@@ -16,7 +16,7 @@
     "@react-three/fiber": "^8.15.13",
     "@react-three/postprocessing": "^2.15.12",
     "expo-camera": "^15.0.16",
-    "framer-motion": "^10.17.9",
+    "framer-motion": "^10.18.0",
     "immutable": "^5.0.0-beta.4",
     "leva": "^0.9.35",
     "next": "14.0.4",
