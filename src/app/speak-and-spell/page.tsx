@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import {
     Box,
     Button,
@@ -8,9 +8,9 @@ import {
     HStack,
     Select,
     Text,
-    VStack,
-    Checkbox
+    VStack
 } from '@chakra-ui/react'
+import {useSearchParams} from "next/navigation";
 
 interface KeyboardLayout {
     type: 'simple' | 'composite';
@@ -45,11 +45,11 @@ const LANGUAGES: Language[] = [
         keyboard: {
             type: 'composite',
             letters: [
-                // Initial consonants (초성)
+                // Consonants
                 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'.split(''),
-                // Vowels (중성)
+                // Vowels
                 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'.split(''),
-                // Final consonants (종성)
+                // Final consonants?
                 'ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ'.split('')
             ]
         }
@@ -57,8 +57,11 @@ const LANGUAGES: Language[] = [
 ]
 
 export default function Home() {
+    const searchParams = useSearchParams()
+    const code = searchParams?.get('lang');
+    const language = LANGUAGES.find(l => l.code === code) ?? LANGUAGES[0];
     const [currentWord, setCurrentWord] = useState('')
-    const [selectedLanguage, setSelectedLanguage] = useState<Language>(LANGUAGES[0])
+    const [selectedLanguage, setSelectedLanguage] = useState<Language>(language)
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
     const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(null)
     const [koreanSyllable, setKoreanSyllable] = useState<KoreanSyllable>({
@@ -66,7 +69,7 @@ export default function Home() {
         jungseong: '',
         jongseong: '',
         isComplete: false
-    })
+    });
 
     useEffect(() => {
         const loadVoices = () => {
@@ -164,20 +167,21 @@ export default function Home() {
             return
         }
 
-        // Korean input handling
         const isConsonant = /[ㄱ-ㅎ]/.test(letter)
         const isVowel = /[ㅏ-ㅣ]/.test(letter)
 
         if (isConsonant) {
             if (!koreanSyllable.choseong) {
-                // Start new syllable with initial consonant
+                /**
+                 * new syllable
+                 */
                 setKoreanSyllable(prev => ({
                     ...prev,
                     choseong: letter,
                     isComplete: false
                 }))
             } else if (koreanSyllable.jungseong && !koreanSyllable.jongseong) {
-                // Add final consonant
+
                 setKoreanSyllable(prev => ({
                     ...prev,
                     jongseong: letter,
@@ -185,7 +189,9 @@ export default function Home() {
                 }))
             }
         } else if (isVowel && koreanSyllable.choseong && !koreanSyllable.jungseong) {
-            // Add vowel to current syllable
+            /**
+             * add vowel to current consonant?
+             */
             setKoreanSyllable(prev => ({
                 ...prev,
                 jungseong: letter,
