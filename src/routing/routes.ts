@@ -3,7 +3,6 @@ import {useSearchParams} from "next/navigation";
 import Immutable from "immutable";
 import GradientDescent from "@/views/gradient-descent/gradient-descent";
 import {useRouter} from "next/router";
-import {AutoFocusProps} from "react-focus-lock/interfaces";
 import Spheres from "@/views/spheres/spheres";
 import TimeDilation from "@/views/time-dilation/time-dilation";
 
