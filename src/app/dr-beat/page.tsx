@@ -91,14 +91,8 @@ const Metronome: React.FC = () => {
     }, []);
 
     const playTick = useCallback(() => {
-        if (Array.isArray(state.interval)) {
-            // Handle swing triplet or dotted eighth
-            // playSound(state.interval[0]);
-            // setTimeout(() => playSound(state.interval[1]), state.interval[0]);
-            console.log(state.interval)
-        } else {
-            playSound(state.interval);
-        }
+        // add possible emphasis logic here?
+        playSound(state.interval);
     }, [state.interval, playSound]);
 
     const startMetronome = useCallback(() => {
