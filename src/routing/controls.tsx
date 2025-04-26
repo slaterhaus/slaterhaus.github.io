@@ -16,7 +16,7 @@ export default function Controls() {
   useEffect(() => {
     if (config?.controls !== "head") return;
     navigator.mediaDevices
-      .getUserMedia({ video: true })
+      ?.getUserMedia({ video: true })
       .then((stream) => {
         setWebcamAvailable(true);
       })
