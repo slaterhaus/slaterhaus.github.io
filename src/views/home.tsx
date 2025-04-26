@@ -11,7 +11,7 @@ export default function Home() {
         useState<Color>(new Color(255, 255, 255));
     const cubes = useMemo(() =>
             Array(10).fill(0).map((_, i) => (
-                <CubeGrid z={-i + 2} key={`cube-grid-${i}`} />
+                <CubeGrid z={-i + 2} key={`cube-grid-${i}`}/>
             )), // No dependencies, so this array is created only once
         []
     );
@@ -32,9 +32,9 @@ export default function Home() {
                     setColor(new Color(Math.random(), Math.random(), Math.random()))
                 }}
             >
-                Greetings, citizen!
-                <meshStandardMaterial attach="material" color={color}/>
-
+                Greetings
+                <meshStandardMaterial
+                    attach="material" color={color}/>
             </Text3D>
         </>
     );
