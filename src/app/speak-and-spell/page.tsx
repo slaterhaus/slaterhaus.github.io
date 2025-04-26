@@ -1,5 +1,5 @@
 'use client';
-import {useEffect, useState} from 'react'
+import {Suspense, useEffect, useState} from 'react'
 import {
     Box,
     Button,
@@ -56,7 +56,7 @@ const LANGUAGES: Language[] = [
     }
 ]
 
-export default function Home() {
+function SpeakAndSpellContent() {
     const searchParams = useSearchParams()
     const code = searchParams?.get('lang');
     const language = LANGUAGES.find(l => l.code === code) ?? LANGUAGES[0];
@@ -372,4 +372,12 @@ export default function Home() {
             </VStack>
         </Container>
     )
+}
+
+export default function Home() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SpeakAndSpellContent />
+        </Suspense>
+    );
 }
