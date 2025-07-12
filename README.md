@@ -29,21 +29,19 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy on GitHub Pages
 
-This project is configured to automatically deploy to Vercel when code is pushed to the master branch.
+This project is configured to automatically deploy to GitHub Pages when code is pushed to the master branch.
 
 ### Setup Instructions
 
-1. Create a Vercel account and link your GitHub repository
-2. Generate a Vercel token from your account settings
-3. Add the token as a secret in your GitHub repository:
-   - Go to your GitHub repository settings
-   - Navigate to Secrets and Variables > Actions
-   - Create a new repository secret named `VERCEL_TOKEN` with your Vercel token as the value
+1. Ensure your repository is named in the format `username.github.io` (for user/organization sites) or has a properly configured `gh-pages` branch (for project sites)
+2. Go to your GitHub repository settings
+3. Navigate to Pages > Build and deployment
+4. Ensure the source is set to "GitHub Actions"
 
-The GitHub Actions workflow will use this token to deploy your application to Vercel whenever changes are pushed to the master branch.
+The GitHub Actions workflow will automatically build and deploy your application to GitHub Pages whenever changes are pushed to the master branch.
 
-For manual deployment, you can use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For more information about GitHub Pages, visit the [GitHub Pages documentation](https://docs.github.com/en/pages).
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
