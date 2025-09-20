@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React, {useRef, useState} from 'react';
 import styles from './multi-tile-screen.module.scss';
 
 interface Props {
@@ -16,6 +15,11 @@ const MultiTileScreen = ({ recordings, onDeleteRecording, onPresentationModeChan
 
     // Keep per-video refs for controlling playback
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+    const syncIntervalRef = useRef<number | null>(null);
+    const lastOverlayUpdateRef = useRef(0);
+    // Track durations to choose a stable master (longest video)
+    const durationsRef = useRef<number[]>([]);
+    const [masterIndex, setMasterIndex] = useState(0);
 
     // Keep object URLs for blobs, clean up on change/unmount
     const [objectUrls, setObjectUrls] = useState<string[]>([]);
@@ -30,11 +34,13 @@ const MultiTileScreen = ({ recordings, onDeleteRecording, onPresentationModeChan
     // Update loop states when recordings change
     React.useEffect(() => {
         setLoopStates((prev) => {
-            const newLoopStates = recordings.map((_, index) =>
+            return recordings.map((_, index) =>
                 prev[index] !== undefined ? prev[index] : false
             );
-            return newLoopStates;
         });
+        // Reset durations and master selection when recordings change
+        durationsRef.current = new Array(recordings.length).fill(0);
+        setMasterIndex(0);
     }, [recordings]);
 
     const handlePlayPause = () => {
@@ -140,8 +146,10 @@ const MultiTileScreen = ({ recordings, onDeleteRecording, onPresentationModeChan
     }, [isPlaying]);
 
     // Sync currentTime if it changes
+    // In presentation mode, we use a drift-correction loop instead to avoid stutter
+    // In normal mode, avoid seeking during playback to prevent micro-stutter; only seek when paused or user scrubs
     React.useEffect(() => {
-        if (!isPresentationMode) return;
+        if (isPresentationMode || isPlaying) return;
         videoRefs.current.forEach((v) => {
             if (!v) return;
             // Only set if metadata is ready
@@ -153,7 +161,52 @@ const MultiTileScreen = ({ recordings, onDeleteRecording, onPresentationModeChan
                 }
             }
         });
-    }, [currentTime, isPresentationMode]);
+    }, [currentTime, isPresentationMode, isPlaying]);
+
+    // Presentation mode drift-correction sync loop to minimize stutter
+    React.useEffect(() => {
+        if (!isPresentationMode) return;
+        const driftThreshold = 0.12; // seconds
+        const intervalId = window.setInterval(() => {
+            const videos = videoRefs.current;
+            const master = videos[masterIndex];
+            if (!master) return;
+            const masterTime = master.currentTime || 0;
+
+            // Throttle overlay time updates to reduce re-renders
+            const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+            if (now - lastOverlayUpdateRef.current > 200) {
+                setCurrentTime(masterTime);
+                lastOverlayUpdateRef.current = now;
+            }
+
+            for (let i = 1; i < videos.length; i++) {
+                const v = videos[i];
+                if (!v) continue;
+                const diff = Math.abs(v.currentTime - masterTime);
+                if (diff > driftThreshold) {
+                    try { v.currentTime = masterTime; } catch {}
+                }
+            }
+
+            if (isPlaying) {
+                // Ensure all videos are playing
+                if (master.paused) { master.play().catch(() => {}); }
+                for (let i = 1; i < videos.length; i++) {
+                    const v = videos[i];
+                    if (!v) continue;
+                    if (v.paused) { v.play().catch(() => {}); }
+                }
+            }
+        }, 100);
+        syncIntervalRef.current = intervalId;
+        return () => {
+            if (syncIntervalRef.current != null) {
+                clearInterval(syncIntervalRef.current);
+                syncIntervalRef.current = null;
+            }
+        };
+    }, [isPresentationMode, isPlaying, objectUrls.length, masterIndex]);
 
     // Calculate optimal grid layout
     const getGridLayout = (count: number) => {
@@ -326,13 +379,27 @@ const MultiTileScreen = ({ recordings, onDeleteRecording, onPresentationModeChan
                                     objectFit: 'contain'
                                 } : {}}
                                 onLoadedMetadata={(e) => {
-                                    // Ensure first frame is shown even before playing
+                                    // Record duration and update masterIndex to the longest video
                                     const v = e.currentTarget as HTMLVideoElement;
+                                    const idx = i;
+                                    const d = isFinite(v.duration) ? v.duration : 0;
+                                    durationsRef.current[idx] = d;
+                                    let maxIdx = 0;
+                                    let maxDur = -1;
+                                    for (let j = 0; j < durationsRef.current.length; j++) {
+                                        const dj = durationsRef.current[j] ?? 0;
+                                        if (dj > maxDur) { maxDur = dj; maxIdx = j; }
+                                    }
+                                    setMasterIndex(maxIdx);
+
+                                    // Ensure first frame is shown even before playing in presentation mode
                                     if (!isPresentationMode) return;
                                     try { v.currentTime = currentTime || 0; } catch {}
                                 }}
                                 onTimeUpdate={(e) => {
-                                    if (i === 0) { // Use first video as time master
+                                    // Avoid per-frame state updates during presentation (causes stutter)
+                                    // Also avoid updating while playing in normal mode to prevent micro-stutter
+                                    if (!isPresentationMode && !isPlaying && i === masterIndex) {
                                         const t = (e.currentTarget as HTMLVideoElement).currentTime;
                                         setCurrentTime(t);
                                     }
