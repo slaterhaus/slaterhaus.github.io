@@ -123,7 +123,7 @@ const ImageDrawingComponent = () => {
                     }}
                 />
             )}
-            <div style={{ position: 'absolute', top: 10, left: 10, color: 'white', backgroundColor: 'rgba(0,0,0,0.5)', padding: '10px' }}>
+            <div style={{ position: 'absolute', bottom: 0, right: 0, color: 'white', backgroundColor: 'rgba(0,0,0,0.2)', padding: '10px' }}>
                 {/*<pre>{JSON.stringify({ orientation, deviceOrientation }, null, 2)}</pre>*/}
                 <input type="file" accept="image/*" onChange={handleImageChange} />
                 <input
